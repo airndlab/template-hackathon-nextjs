@@ -27,6 +27,11 @@ jobs:
         with:
           cmd: install --immutable
 
+      - name: Run yarn build
+        uses: borales/actions-yarn@v4
+        with:
+          cmd: build
+
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
 
@@ -44,9 +49,6 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-
-      - name: run ls
-        run: ls -la
 
       - name: Build and push to Docker Hub
         uses: docker/build-push-action@v5
