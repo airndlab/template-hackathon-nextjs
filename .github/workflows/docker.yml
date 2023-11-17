@@ -21,8 +21,8 @@ jobs:
   build:
     runs-on: ubuntu-latest
     env:
-      IMAGE: docker.io/${{ github.repository }}:${{ env.TAG }}
-      YCR_IMAGE: cr.yandex/${{ secrets.YC_CONTAINER_REGISTRY_ID }}/${{ github.repository }}:${{ env.TAG }}
+      IMAGE: docker.io/${{ github.repository }}:$TAG
+      YCR_IMAGE: cr.yandex/${{ secrets.YC_CONTAINER_REGISTRY_ID }}/${{ github.repository }}:$TAG
 
     steps:
       - name: Checkout repository
