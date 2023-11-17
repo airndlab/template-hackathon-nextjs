@@ -1,7 +1,6 @@
 name: Docker image
 
 on:
-  workflow_dispatch:
   release:
     types:
       - created
@@ -53,12 +52,6 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: run ls
-        run: ls -la
-
-      - name: run ls .next
-        run: ls .next -ls
-
       - name: Build and push to Docker Hub
         uses: docker/build-push-action@v5
         with:
@@ -67,13 +60,13 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
 
-#      - name: Login to Yandex Cloud Container Registry
-#        uses: yc-actions/yc-cr-login@v1
-#        with:
-#          yc-sa-json-credentials: ${{ secrets.YC_SERVICE_ACCOUNT_KEY_FILE }}
-#
-#      - name: Tag and push to Yandex Cloud Container Registry
-#        run: |
-#          docker pull ${{ env.IMAGE }}
-#          docker tag ${{ env.IMAGE }} ${{ env.YCR_IMAGE }}
-#          docker push ${{ env.YCR_IMAGE }}
+      - name: Login to Yandex Cloud Container Registry
+        uses: yc-actions/yc-cr-login@v1
+        with:
+          yc-sa-json-credentials: ${{ secrets.YC_SERVICE_ACCOUNT_KEY_FILE }}
+
+      - name: Tag and push to Yandex Cloud Container Registry
+        run: |
+          docker pull ${{ env.IMAGE }}
+          docker tag ${{ env.IMAGE }} ${{ env.YCR_IMAGE }}
+          docker push ${{ env.YCR_IMAGE }}
