@@ -7,7 +7,6 @@ on:
         description: 'Docker image tag'
         required: true
         type: string
-        default: ${{ github.ref_name }}
   release:
     types:
       - created
@@ -15,12 +14,15 @@ on:
 permissions:
   contents: read
 
+env:
+    TAG: ${{ github.event_name == 'workflow_dispatch' && inputs.tag || github.ref_name }}
+
 jobs:
   build:
     runs-on: ubuntu-latest
     env:
-      IMAGE: docker.io/${{ github.repository }}:${{ inputs.tag }}
-      YCR_IMAGE: cr.yandex/${{ secrets.YC_CONTAINER_REGISTRY_ID }}/${{ github.repository }}:${{ inputs.tag }}
+      IMAGE: docker.io/${{ github.repository }}:${{ env.TAG }}
+      YCR_IMAGE: cr.yandex/${{ secrets.YC_CONTAINER_REGISTRY_ID }}/${{ github.repository }}:${{ env.TAG }}
 
     steps:
       - name: Checkout repository
@@ -53,7 +55,7 @@ jobs:
         with:
           images: ${{ github.repository }}
           tags: |
-            type=raw,value=${{ inputs.tag }}
+            type=raw,value=${{ env.TAG }}
 
       - name: Login to Docker Hub
         uses: docker/login-action@v3
